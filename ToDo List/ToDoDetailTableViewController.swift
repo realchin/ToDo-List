@@ -7,6 +7,16 @@
 
 import UIKit
 
+private let dateFormatter: DateFormatter = {
+    
+    print("🗓 I just created a DateFormatter!")
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateStyle = .short
+    dateFormatter.timeStyle = .short
+    return dateFormatter
+    
+} ()
+
 class ToDoDetailTableViewController: UITableViewController {
     
     @IBOutlet weak var saveBarButton: UIBarButtonItem!
@@ -17,6 +27,7 @@ class ToDoDetailTableViewController: UITableViewController {
     @IBOutlet weak var dateLabel: UILabel!
     
     var toDoItem: ToDoItem!
+    
     let datePickerIndexPath = IndexPath(row: 1, section: 1)
     let notesTextViewIndexPath = IndexPath(row: 0, section: 2)
     let notesRowHeight: CGFloat = 200
@@ -27,7 +38,7 @@ class ToDoDetailTableViewController: UITableViewController {
         
         if toDoItem == nil {
             
-            toDoItem = ToDoItem(name: "", date: Date(), notes: "", reminderSet: false)
+            toDoItem = ToDoItem(name: "", date: Date().addingTimeInterval(24*60*60), notes: "", reminderSet: false)
             
         }
         
@@ -42,6 +53,7 @@ class ToDoDetailTableViewController: UITableViewController {
         noteView.text = toDoItem.notes
         reminderSwitch.isOn = toDoItem.reminderSet
         dateLabel.textColor = (reminderSwitch.isOn ? .black : .gray)
+        dateLabel.text = dateFormatter.string(from: toDoItem.date)
         
     }
     
@@ -68,6 +80,13 @@ class ToDoDetailTableViewController: UITableViewController {
         tableView.endUpdates()
         
     }
+    
+    @IBAction func datePickerChanged(_ sender: UIDatePicker) {
+        
+        dateLabel.text = dateFormatter.string(from: sender.date)
+        
+    }
+    
     
     
 }
